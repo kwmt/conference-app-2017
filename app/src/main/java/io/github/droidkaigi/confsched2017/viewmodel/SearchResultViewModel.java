@@ -40,8 +40,10 @@ public class SearchResultViewModel extends BaseObservable implements ViewModel {
 
     private boolean shouldEllipsis;
 
+    private int checkVisibility;
+
     private SearchResultViewModel(String text, @DrawableRes int iconResId,
-            @StringRes int typeStringResId, Session session, Context context) {
+            @StringRes int typeStringResId, Session session, Context context, boolean isMySession) {
         this.text = text;
         this.sessionTitle = session.title;
         if (session.speaker != null) {
@@ -51,6 +53,7 @@ public class SearchResultViewModel extends BaseObservable implements ViewModel {
         this.type = context.getString(typeStringResId);
         this.shouldEllipsis = typeStringResId == R.string.description;
         this.session = session;
+        this.checkVisibility = isMySession ? View.VISIBLE : View.GONE;
         this.textAppearanceSpan = new TextAppearanceSpan(context, R.style.SearchResultAppearance);
     }
 
@@ -94,6 +97,10 @@ public class SearchResultViewModel extends BaseObservable implements ViewModel {
         return type;
     }
 
+    public int getCheckVisibility() {
+        return checkVisibility;
+    }
+
     public SpannableStringBuilder getMatchedText(@Nullable String searchText) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
@@ -128,19 +135,19 @@ public class SearchResultViewModel extends BaseObservable implements ViewModel {
         }
     }
 
-    static SearchResultViewModel createTitleType(@NonNull Session session, Context context) {
+    static SearchResultViewModel createTitleType(@NonNull Session session, Context context, boolean isMySession) {
         return new SearchResultViewModel(session.title, R.drawable.ic_title_12_vector,
-                R.string.title, session, context);
+                R.string.title, session, context, isMySession);
     }
 
-    static SearchResultViewModel createDescriptionType(@NonNull Session session, Context context) {
+    static SearchResultViewModel createDescriptionType(@NonNull Session session, Context context, boolean isMySession) {
         return new SearchResultViewModel(session.desc, R.drawable.ic_description12_vector,
-                R.string.description, session, context);
+                R.string.description, session, context, isMySession);
     }
 
-    static SearchResultViewModel createSpeakerType(@NonNull Session session, Context context) {
+    static SearchResultViewModel createSpeakerType(@NonNull Session session, Context context, boolean isMySession) {
         return new SearchResultViewModel(session.speaker.name, R.drawable.ic_speaker_12_vector,
-                R.string.speaker, session, context);
+                R.string.speaker, session, context, isMySession);
     }
 
 
